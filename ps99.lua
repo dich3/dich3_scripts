@@ -6,8 +6,8 @@ local Config = {
 	Rooms = {
 		Boss = {
 			DoorPos = nil,
+            BigChest = nil,
             Chests = {
-                BigChest = nil,
                 MiniChest = {
                     Pos = {},
                     CheckPart = {},
@@ -57,37 +57,37 @@ local Chests = BossTab:NewSection("Chests")
 Chests:NewToggle("Auto Boss (experimental)", "Make sure the teleport status is Ready and the door is opened.", function(state)
     _G.Settings.AutoBoss = state
     while _G.Settings.AutoBoss do
-    print("loop")
-    local restartWhile = false
+        print("loop")
+        local restartWhile = false
 
-    for i, v in Config.Rooms.Boss.Chests.MiniChest.CheckPart do
-        if restartWhile then break end
+        for i, v in Config.Rooms.Boss.Chests.MiniChest.CheckPart do
+            if restartWhile then break end
 
-        local OverlapParams = OverlapParams.new()
-        OverlapParams.IncludeInstances = workspace.__THINGS.Breakables:GetChildren()
+            local OverlapParams = OverlapParams.new()
+            OverlapParams.IncludeInstances = workspace.__THINGS.Breakables:GetChildren()
 
-        local ActiveChests = workspace:GetPartBoundsInBox(v.CFrame, v.Size, OverlapParams)
+            local ActiveChests = workspace:GetPartBoundsInBox(v.CFrame, v.Size, OverlapParams)
 
-        for _, v2 in ActiveChests do
-            if (v2.Position - character.HumanoidRootPart.Position).Magnitude <= 10 then 
-                restartWhile = true
-                break 
-            end
-            if v2:IsA("Part") then
-                print(v2:GetFullName())
-                character.HumanoidRootPart.CFrame = CFrame.new(Config.Rooms.Boss.DoorPos)
-                task.wait(0.5)
-                character.HumanoidRootPart.CFrame = CFrame.new(v2.Position + Vector3.new(0, 5, 0))
-				task.wait(0.5)
-				character.HumanoidRootPart.CFrame = CFrame.new(Config.Rooms.Boss.Chests.BigChest)
-                restartWhile = true
-                break 
+            for _, v2 in ActiveChests do
+                if (v2.Position - character.HumanoidRootPart.Position).Magnitude <= 10 then 
+                    restartWhile = true
+                    break 
+                end
+                if v2:IsA("Part") then
+                    print(v2:GetFullName())
+                    character.HumanoidRootPart.CFrame = CFrame.new(Config.Rooms.Boss.DoorPos)
+                    task.wait(0.5)
+                    character.HumanoidRootPart.CFrame = CFrame.new(v2.Position + Vector3.new(0, 5, 0))
+    				task.wait(0.5)
+    				character.HumanoidRootPart.CFrame = CFrame.new(Config.Rooms.Boss.BigChest)
+                    restartWhile = true
+                    break 
+                end
             end
         end
-    end
 
-    task.wait(2)
-end
+        task.wait(2)
+    end
 end)
 
 Chests:NewButton("Big Chest", "", function()
@@ -96,7 +96,7 @@ Chests:NewButton("Big Chest", "", function()
 end)
 
 for _, v in workspace.__THINGS.__INSTANCE_CONTAINER.Active.Backrooms.GeneratedBackrooms:GetChildren() do
-	if v.Name == "MiniBossRoom" then
+	if v.Name == "MiniBossRoom" and not Config.Rooms.Boss.DoorPos then
         MiniBossReady:UpdateLabel('Status: <font color="rgb(0,255,0)">Ready</font>')
 
 		Config.Rooms.Boss.DoorPos = v.LockedDoors.Door.Animated.Part.Position
@@ -131,7 +131,7 @@ for _, v in workspace.__THINGS.__INSTANCE_CONTAINER.Active.Backrooms.GeneratedBa
 end
 
 workspace.__THINGS.__INSTANCE_CONTAINER.Active.Backrooms.GeneratedBackrooms.ChildAdded:Connect(function(v)
-	if v.Name == "MiniBossRoom" then
+	if v.Name == "MiniBossRoom" and not Config.Rooms.Boss.DoorPos then
         MiniBossReady:UpdateLabel('Status: <font color="rgb(0,255,0)">Ready</font>')
 
 		Config.Rooms.Boss.DoorPos = v.LockedDoors.Door.Animated.Part.Position

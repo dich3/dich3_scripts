@@ -58,10 +58,10 @@ Chests:NewToggle("Auto Boss (experimental)", "Make sure the teleport status is R
     _G.Settings.AutoBoss = state
     while _G.Settings.AutoBoss do
         print("loop")
-        local restartWhile = false
+        local restartWhile = false -- Notre variable de contrôle globale
 
         for i, v in Config.Rooms.Boss.Chests.MiniChest.CheckPart do
-            if restartWhile then break end
+            if restartWhile then break end -- Casse la boucle 'for' pour retourner au 'while'
 
             local OverlapParams = OverlapParams.new()
             OverlapParams.IncludeInstances = workspace.__THINGS.Breakables:GetChildren()
@@ -78,8 +78,8 @@ Chests:NewToggle("Auto Boss (experimental)", "Make sure the teleport status is R
                     character.HumanoidRootPart.CFrame = CFrame.new(Config.Rooms.Boss.DoorPos)
                     task.wait(0.5)
                     character.HumanoidRootPart.CFrame = CFrame.new(v2.Position + Vector3.new(0, 5, 0))
-    				task.wait(0.5)
-    				character.HumanoidRootPart.CFrame = CFrame.new(Config.Rooms.Boss.BigChest)
+                    task.wait(0.5)
+                    character.HumanoidRootPart.CFrame = CFrame.new(Config.Rooms.Boss.BigChest + Vector3.new(0, 5, 0))
                     restartWhile = true
                     break 
                 end
